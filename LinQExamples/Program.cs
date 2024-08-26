@@ -17,6 +17,7 @@ var orders = new List<Order>
             };
 
 // Примеры использования LINQ
+Console.WriteLine("Simple Examples");
 ShowWhereExample(users);
 ShowSelectExample(users);
 ShowOrderByExample(users);
@@ -27,7 +28,7 @@ ShowFirstExample(users);
 ShowDistinctExample();
 ShowSetOperationsExample();
 
-
+#region simple linq operations
 // Where
 static void ShowWhereExample(List<User> users)
 {
@@ -146,3 +147,80 @@ static void ShowSetOperationsExample()
         Console.WriteLine(number);
     }
 }
+
+#endregion
+
+Console.WriteLine();
+Console.WriteLine("Complex examples of Linq");
+
+#region Aggregation GroupBy
+var employees = new List<Employee>
+{
+    new Employee { Name = "John", Department = "HR" },
+    new Employee { Name = "Jane", Department = "IT" },
+    new Employee { Name = "Sam", Department = "HR" },
+    new Employee { Name = "Sara", Department = "IT" }
+};
+
+var departmentGroups = employees
+    .GroupBy(e => e.Department)
+    .Select(g => new
+    {
+        Department = g.Key,
+        EmployeeCount = g.Count()
+    })
+    .ToList();
+
+foreach (var department in departmentGroups)
+{
+    Console.WriteLine(department);
+}
+Console.WriteLine();
+#endregion
+
+#region Inner LinQ Operations
+var students = new List<Student>
+{
+    new Student { Name = "John", Grades = new List<int> { 85, 92, 78 } },
+    new Student { Name = "Jane", Grades = new List<int> { 88, 79, 91 } },
+    new Student { Name = "Sam", Grades = new List<int> { 60, 70, 68 } }
+};
+
+var topStudents = students
+    .Where(s => s.Grades.Any(g => g > 90))
+    .ToList();
+
+foreach (var student in topStudents)
+{
+    Console.WriteLine(student.Name);
+}
+Console.WriteLine();
+#endregion
+
+#region GroupBy and Join
+var courseStudents = new List<CourseStudents>
+{
+    new() { Id = 1, Name = "John" },
+    new() { Id = 2, Name = "Jane" }
+};
+
+var courses = new List<Course>
+{
+    new Course { StudentId = 1, CourseName = "Math" },
+    new Course { StudentId = 1, CourseName = "Science" },
+    new Course { StudentId = 2, CourseName = "History" }
+};
+
+var studentCourses = courseStudents
+    .Join(courses, s => s.Id, c => c.StudentId, (s, c) => new
+    {
+        StudentName = s.Name,
+        CourseName = c.CourseName
+    })
+    .ToList();
+
+foreach(var student in studentCourses)
+{
+    Console.WriteLine($"{student.StudentName} : {student.CourseName} ");
+}
+#endregion
