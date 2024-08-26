@@ -17,7 +17,7 @@ var orders = new List<Order>
             };
 
 // Примеры использования LINQ
-Console.WriteLine("Simple Examples");
+Console.WriteLine("SIMPLE EXAMPLES");
 ShowWhereExample(users);
 ShowSelectExample(users);
 ShowOrderByExample(users);
@@ -151,7 +151,7 @@ static void ShowSetOperationsExample()
 #endregion
 
 Console.WriteLine();
-Console.WriteLine("Complex examples of Linq");
+Console.WriteLine("COMPLEX EXAMPLES");
 
 #region Aggregation GroupBy
 var employees = new List<Employee>
@@ -224,3 +224,69 @@ foreach(var student in studentCourses)
     Console.WriteLine($"{student.StudentName} : {student.CourseName} ");
 }
 #endregion
+
+Console.WriteLine();
+Console.WriteLine("LIVE EXAMPLES ");
+
+IEnumerable<int> collection = [1, 2, 3, 4, 5];
+IEnumerable<string> collection2 = ["a", "b", "c", "d", "f"];
+
+var resultsLINQ = collection.Select((x,i) => $"{i} {x}");
+
+foreach(var result in resultsLINQ)
+{
+    Console.WriteLine(result);
+}
+
+Console.WriteLine("ZIP");
+var resultsZip = collection.Zip(collection2);
+
+foreach(var result in resultsZip)
+{
+
+    Console.WriteLine(result);
+}
+
+Console.WriteLine("\nJoin");
+
+IEnumerable<Person> collectionPerson = [new(0, "Matvey", 22), new(1, "Tanya", 20)];
+IEnumerable<Product> collectionProduct = [new(0, "Chitos"), new(0, "Doritos"), new(1, "Lays")];
+
+var customersBoughtsSeparate = collectionPerson.Join(
+    collectionProduct,
+    person => person.Id,
+    product => product.PersonId,
+    (person, product) => $"{person.Name} bought {product.Name}");
+
+foreach (var customer in customersBoughtsSeparate)
+{
+
+    Console.WriteLine(customer);
+}
+
+Console.WriteLine("\nGroup Join");
+var customersBoughtsAll = collectionPerson.GroupJoin(
+    collectionProduct,
+    person => person.Id,
+    product => product.PersonId,
+    (person, products) =>
+    $"{person.Name} " +
+    $"bought " +
+    $"{string.Join(',', products)}");
+
+foreach (var customer in customersBoughtsAll)
+{
+
+    Console.WriteLine(customer);
+}
+
+Console.WriteLine("\nOrder By");
+var orderedCustomers = collectionPerson.OrderBy(x => x.Age);
+
+foreach (var customer in orderedCustomers)
+{
+
+    Console.WriteLine(customer);
+}
+record Person (int Id, string Name, int Age);
+record Product (int PersonId, string Name);
